@@ -7,7 +7,7 @@ export class ValidatorService {
     senderAmountMoney: string | number,
     transactionAmountMoney: string | number,
   ): boolean {
-    if (transactionAmountMoney <= 0) {
+    if (Number(transactionAmountMoney) <= 0) {
       throw new AmountMoneyNotEnoughException();
     }
 
