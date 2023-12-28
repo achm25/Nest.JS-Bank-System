@@ -8,10 +8,16 @@ import { User } from '../shared/users/user.interface';
 import { Model } from 'mongoose';
 import { RegisterDto, SignInDto } from './dto/auth.dto';
 import * as argon from 'argon2';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
-  constructor(@InjectModel('users') private userModel: Model<User>) {}
+  constructor(
+    private jwt: JwtService,
+    private config: ConfigService,
+    @InjectModel('users') private userModel: Model<User>,
+  ) {}
 
   async register(dto: RegisterDto) {
     try {
@@ -46,6 +52,27 @@ export class AuthService {
       throw new ForbiddenException('Password Error');
     }
 
-    return user;
+    return this.signToken(user.id, user.username);
+  }
+
+  async signToken(
+    userId: number,
+    username: string,
+  ): Promise<{ access_token: string }> {
+    const payload = {
+      sub: userId,
+      username,
+    };
+
+    const secret = this.config.get('JWT_SECRET');
+
+    const access_token = await this.jwt.signAsync(payload, {
+      expiresIn: '999999999999m',
+      secret: secret,
+    });
+
+    return {
+      access_token,
+    };
   }
 }
