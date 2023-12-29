@@ -4,7 +4,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from '../shared/users/user.interface';
+import { User } from '../users/user.interface';
 import { Model } from 'mongoose';
 import { RegisterDto, SignInDto } from './dto/auth.dto';
 import * as argon from 'argon2';
@@ -67,7 +67,7 @@ export class AuthService {
     const secret = this.config.get('JWT_SECRET');
 
     const access_token = await this.jwt.signAsync(payload, {
-      expiresIn: '999999999999m',
+      expiresIn: '30m',
       secret: secret,
     });
 
