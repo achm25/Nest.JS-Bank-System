@@ -4,7 +4,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from '../users/user.interface';
+import { User } from '../users/models/user.interface';
 import { Model } from 'mongoose';
 import { RegisterDto, SignInDto } from './dto/auth.dto';
 import * as argon from 'argon2';
