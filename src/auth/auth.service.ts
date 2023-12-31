@@ -49,7 +49,7 @@ export class AuthService {
     const passwordMatch = await argon.verify(user.hash, dto.password);
 
     if (!passwordMatch) {
-      throw new ForbiddenException('Password Error');
+      throw new ForbiddenException(' Password Error');
     }
 
     return this.signToken(user.id, user.username);
