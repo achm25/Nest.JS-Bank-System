@@ -15,9 +15,9 @@ import { GetUser } from '../auth/decorator';
 export class TransactionsController {
   constructor(private transactionService: TransactionsService) {}
 
-  @Get('/:id/transactions')
-  async transactionsList(@Param('id') id: string) {
-    return await this.transactionService.transactionsList(id);
+  @Get('/data')
+  async transactionsList(@GetUser('id') userId: string) {
+    return await this.transactionService.transactionsList(userId);
   }
 
   @Post('/deposit')
