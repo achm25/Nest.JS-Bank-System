@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { AmountMoneyNotEnoughException } from '../../exceptions';
+import {
+  AmountMoneyNotEnoughException,
+  AttemptMakeTransferToMyselfException,
+  BillNotFoundException,
+} from '../../exceptions';
 
 @Injectable()
 export class ValidatorService {
@@ -13,6 +17,21 @@ export class ValidatorService {
 
     if (Number(senderAmountMoney) < Number(transactionAmountMoney)) {
       throw new AmountMoneyNotEnoughException();
+    }
+
+    return true;
+  }
+
+  public isCorrectRecipient(
+    senderBillId: number,
+    recipientBillId: number,
+  ): boolean {
+    if (!senderBillId || !recipientBillId) {
+      throw new BillNotFoundException();
+    }
+
+    if (senderBillId === recipientBillId) {
+      throw new AttemptMakeTransferToMyselfException();
     }
 
     return true;
