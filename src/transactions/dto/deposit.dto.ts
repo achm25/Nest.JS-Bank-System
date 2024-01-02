@@ -1,10 +1,7 @@
-import { IsDate, IsEnum, IsString, Min } from 'class-validator';
+import { IsEnum, IsString, Min } from 'class-validator';
 import { TransactionType } from '../../constants';
 
 export class DepositDto {
-  @IsDate()
-  date: Date;
-
   @IsString()
   fromAccountNumber: string;
 
@@ -12,7 +9,7 @@ export class DepositDto {
   toAccountNumber: string;
 
   @IsEnum(TransactionType)
-  type: TransactionType = TransactionType.WITHDRAW;
+  type: TransactionType = TransactionType.DEPOSIT;
 
   @Min(0)
   amount: number;

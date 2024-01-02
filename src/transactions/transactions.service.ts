@@ -11,9 +11,9 @@ import { TransactionStatus, TransactionType } from '../constants';
 export class TransactionsService {
   private readonly _logger = new Logger(TransactionsService.name);
   constructor(
-    @InjectModel('Transaction')
-    private readonly transactionModel: Model<Transaction>,
-    private readonly _validatorService: ValidatorService,
+    @InjectModel('transactions')
+    private transactionModel: Model<Transaction>,
+    // private readonly _validatorService: ValidatorService,
   ) {}
 
   async getUserTransactions(userId: string) {
