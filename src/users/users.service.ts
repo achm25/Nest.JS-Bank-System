@@ -8,6 +8,15 @@ import { User } from './models/user.interface';
 export class UserService {
   constructor(@InjectModel('users') private userModel: Model<User>) {}
 
+  async findUserById(userId: number) {
+    try {
+      const user = await this.userModel.findById(userId).exec();
+      return user;
+    } catch (error) {
+      throw new Error(` Error updating user: ${error.message}`);
+    }
+  }
+
   async editUser(userId: number, dto: EditUserDto) {
     try {
       const updatedUser = await this.userModel.findByIdAndUpdate(userId, dto, {

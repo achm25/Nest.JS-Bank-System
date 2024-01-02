@@ -1,11 +1,19 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsDate, IsEnum, IsString, Min } from 'class-validator';
+import { TransactionType } from '../../constants';
 
 export class DepositDto {
-  @IsString()
-  @IsOptional()
-  firstName?: string;
+  @IsDate()
+  date: Date;
 
   @IsString()
-  @IsOptional()
-  secondName?: string;
+  fromAccountNumber: string;
+
+  @IsString()
+  toAccountNumber: string;
+
+  @IsEnum(TransactionType)
+  type: TransactionType = TransactionType.WITHDRAW;
+
+  @Min(0)
+  amount: number;
 }

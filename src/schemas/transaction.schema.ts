@@ -1,8 +1,6 @@
-
 import * as mongoose from 'mongoose';
 import { IsDate, IsString, Min } from 'class-validator';
-import { TransactionStatus } from '../constants/transaction-status.constant';
-import { TransactionType } from '../constants/transaction-type.constant';
+import { TransactionStatus, TransactionType } from '../constants';
 
 export const TransactionSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },

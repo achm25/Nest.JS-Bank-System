@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose';
+import { Transaction } from '../../transactions/models/transaction.interface';
 
 export interface User extends mongoose.Document {
   id: string;
@@ -7,4 +8,5 @@ export interface User extends mongoose.Document {
   firstName: string;
   secondName: string;
   registerDate: string;
+  transactions: mongoose.Types.ObjectId[] | Transaction[];
 }
