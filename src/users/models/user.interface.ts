@@ -8,5 +8,6 @@ export interface User extends mongoose.Document {
   firstName: string;
   secondName: string;
   registerDate: string;
+  balance: number;
   transactions: mongoose.Types.ObjectId[] | Transaction[];
 }

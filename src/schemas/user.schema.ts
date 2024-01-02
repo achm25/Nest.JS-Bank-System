@@ -7,4 +7,5 @@ export const UserSchema = new mongoose.Schema({
   firstName: String,
   secondName: String,
   registerData: String,
+  balance: { type: Number, default: 0 },
 });

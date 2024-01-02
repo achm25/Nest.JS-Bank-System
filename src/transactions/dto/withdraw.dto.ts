@@ -1,11 +1,13 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsString, Min } from 'class-validator';
+import { TransactionType } from '../../constants';
 
 export class WithdrawDto {
   @IsString()
-  @IsOptional()
-  firstName?: string;
+  fromAccountNumber: string;
 
-  @IsString()
-  @IsOptional()
-  secondName?: string;
+  @IsEnum(TransactionType)
+  type: TransactionType = TransactionType.WITHDRAW;
+
+  @Min(0)
+  amount: number;
 }

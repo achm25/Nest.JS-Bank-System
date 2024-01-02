@@ -13,7 +13,7 @@ export class TransactionsService {
   constructor(
     @InjectModel('transactions')
     private transactionModel: Model<Transaction>,
-    // private readonly _validatorService: ValidatorService,
+    private readonly _validatorService: ValidatorService,
   ) {}
 
   async getUserTransactions(userId: string) {
@@ -24,6 +24,16 @@ export class TransactionsService {
   }
 
   async deposit(user: User, depositDto: DepositDto) {
+    this._validatorService.isCorrectAmountMoney(
+      user.balance,
+      depositDto.amount,
+    );
+
+    this._validatorService.isCorrectRecipient(
+      depositDto.fromAccountNumber,
+      depositDto.toAccountNumber,
+    );
+
     try {
       const depositTransaction = new this.transactionModel({
         user: user.id,
@@ -37,27 +47,36 @@ export class TransactionsService {
 
       const savedTransaction = await depositTransaction.save();
       user.transactions.push(savedTransaction.id);
+      user.balance -= depositDto.amount;
       await user.save();
       return savedTransaction;
     } catch (error) {
       throw new Error(`Deposit failed: ${error.message}`);
     }
-    // this._validatorService.isCorrectRecipient(
-    //   senderBill?.id,
-    //   recipientBill?.id,
-    // );
-    //
-    // this._validatorService.isCorrectAmountMoney(
-    //   user.userAuth.role,
-    //   senderBill.amountMoney,
-    //   createTransactionDto.amountMoney,
-    // );
   }
 
-  async withdraw(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    userId: string,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    withdrawDto: WithdrawDto,
-  ): Promise<number | any> {}
+  async withdraw(user: User, withdrawDto: WithdrawDto) {
+    this._validatorService.isCorrectAmountMoney(
+      user.balance,
+      withdrawDto.amount,
+    );
+    try {
+      const depositTransaction = new this.transactionModel({
+        user: user.id,
+        date: new Date(),
+        fromAccountNumber: withdrawDto.fromAccountNumber,
+        status: TransactionStatus.CREATED,
+        type: TransactionType.WITHDRAW,
+        amount: withdrawDto.amount,
+      });
+
+      const savedTransaction = await depositTransaction.save();
+      user.transactions.push(savedTransaction.id);
+      user.balance -= withdrawDto.amount;
+      await user.save();
+      return savedTransaction;
+    } catch (error) {
+      throw new Error(`Withdraw failed: ${error.message}`);
+    }
+  }
 }

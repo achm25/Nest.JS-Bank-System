@@ -23,8 +23,8 @@ export class ValidatorService {
   }
 
   public isCorrectRecipient(
-    senderBillId: number,
-    recipientBillId: number,
+    senderBillId: string,
+    recipientBillId: string,
   ): boolean {
     if (!senderBillId || !recipientBillId) {
       throw new BillNotFoundException();

@@ -3,6 +3,7 @@ import { TransactionsController } from './transactions.controller';
 import { TransactionsService } from './transactions.service';
 import { TransactionSchema } from '../schemas/transaction.schema';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ValidatorService } from '../utils/services';
 
 @Module({
   imports: [
@@ -11,6 +12,6 @@ import { MongooseModule } from '@nestjs/mongoose';
     ]),
   ],
   controllers: [TransactionsController],
-  providers: [TransactionsService],
+  providers: [TransactionsService, ValidatorService],
 })
 export class TransactionModule {}

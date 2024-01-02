@@ -18,7 +18,7 @@ import { JwtGuard } from '../auth/guard';
 export class TransactionsController {
   constructor(private transactionService: TransactionsService) {}
 
-  @Get('data')
+  @Get('me')
   async getUserTransactions(@GetUser('id') userId: string) {
     return await this.transactionService.getUserTransactions(userId);
   }
@@ -31,10 +31,7 @@ export class TransactionsController {
 
   @Post('withdraw')
   @HttpCode(HttpStatus.OK)
-  async withdraw(
-    @GetUser('id') userId: string,
-    @Body() withdrawDto: WithdrawDto,
-  ) {
-    return await this.transactionService.withdraw(userId, withdrawDto);
+  async withdraw(@GetUser() user: User, @Body() withdrawDto: WithdrawDto) {
+    return await this.transactionService.withdraw(user, withdrawDto);
   }
 }
