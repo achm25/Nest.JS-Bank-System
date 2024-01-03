@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
 import { DepositDto, WithdrawDto } from './dto';
-import { GetUser } from '../auth/decorator';
+import { GetUser } from '../decorator';
 import { User } from '../users';
 import { JwtGuard } from '../auth/guard';
 

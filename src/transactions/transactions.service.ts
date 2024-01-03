@@ -23,6 +23,15 @@ export class TransactionsService {
     return transactions;
   }
 
+  async getAccountTransactions(accountId: string) {
+    const transactions = await this.transactionModel
+      .find({
+        $or: [{ fromAccountNumber: accountId }, { toAccountNumber: accountId }],
+      })
+      .exec();
+    return transactions;
+  }
+
   async deposit(user: User, depositDto: DepositDto) {
     this._validatorService.isCorrectAmountMoney(
       user.balance,

@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import {
+  AccountDosntBelongToUserException,
   AmountMoneyNotEnoughException,
   AttemptMakeTransferToMyselfException,
-  BillNotFoundException,
-} from '../../exceptions';
+  BillNotFoundException
+} from "../../exceptions";
+import { User } from '../../users';
+import { Account } from "../../accounts/models/account.interface";
 
 @Injectable()
 export class ValidatorService {
@@ -34,6 +37,16 @@ export class ValidatorService {
       throw new AttemptMakeTransferToMyselfException();
     }
 
+    return true;
+  }
+
+  public isAccountBelongsToUser(user: User, accountId: string): boolean {
+    const isAccountOfUser = (<[Account]>user.accounts).find(
+      (account) => account.id === accountId,
+    );
+    if (!isAccountOfUser) {
+      throw new AccountDosntBelongToUserException();
+    }
     return true;
   }
 }

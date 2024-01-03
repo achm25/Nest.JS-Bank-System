@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Patch, UseGuards } from '@nestjs/common';
-import { GetUser } from '../auth/decorator';
+import { GetUser } from '../decorator';
 import { JwtGuard } from '../auth/guard';
 import { EditUserDto } from './dto';
 import { UserService } from './users.service';
@@ -12,6 +12,11 @@ export class UserController {
   @Get('me')
   getMe(@GetUser() user: User) {
     return user;
+  }
+
+  @Get('balance')
+  getBalance(@GetUser() user: User) {
+    return user.balance;
   }
 
   @Patch('me')

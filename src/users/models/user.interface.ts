@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import { Transaction } from '../../transactions/models/transaction.interface';
+import { Account } from '../../accounts/models/account.interface';
 
 export interface User extends mongoose.Document {
   id: string;
@@ -8,6 +8,5 @@ export interface User extends mongoose.Document {
   firstName: string;
   secondName: string;
   registerDate: string;
-  balance: number;
-  transactions: mongoose.Types.ObjectId[] | Transaction[];
+  accounts: mongoose.Types.ObjectId[] | Account[];
 }
