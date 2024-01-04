@@ -16,6 +16,17 @@ export class TransactionsService {
     private readonly _validatorService: ValidatorService,
   ) {}
 
+  async getTransactionData(transactionId: string) {
+    try {
+      const transaction = await this.transactionModel
+        .findById(transactionId)
+        .exec();
+      return transaction;
+    } catch (error) {
+      throw new Error(` Error Finding Transaction: ${error.message}`);
+    }
+  }
+
   async getUserTransactions(userId: string) {
     const transactions = await this.transactionModel
       .find({ user: userId })

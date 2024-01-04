@@ -5,8 +5,8 @@ import {
   Post,
   HttpCode,
   HttpStatus,
-  UseGuards,
-} from '@nestjs/common';
+  UseGuards, Param
+} from "@nestjs/common";
 import { TransactionsService } from './transactions.service';
 import { DepositDto, WithdrawDto } from './dto';
 import { GetUser } from '../decorator';
@@ -18,9 +18,9 @@ import { JwtGuard } from '../auth/guard';
 export class TransactionsController {
   constructor(private transactionService: TransactionsService) {}
 
-  @Get('me')
-  async getUserTransactions(@GetUser('id') userId: string) {
-    return await this.transactionService.getUserTransactions(userId);
+  @Get(':id')
+  async getUserTransactions(@Param('id') transactionId: string) {
+    return await this.transactionService.getTransactionData(transactionId);
   }
 
   @Post('deposit')
