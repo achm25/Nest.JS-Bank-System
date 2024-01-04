@@ -5,6 +5,7 @@ import { Account } from './models/account.interface';
 import { User } from '../users';
 import { ValidatorService } from '../utils/services';
 import { TransactionsService } from '../transactions/transactions.service';
+import { Transaction } from "../transactions/models/transaction.interface";
 
 @Injectable()
 export class AccountsService {
@@ -35,5 +36,14 @@ export class AccountsService {
     const transactions =
       await this.transactionsService.getAccountTransactions(accountId);
     return transactions;
+  }
+
+  async updateAccountBalance(account: Account, amount: number) {
+    account.balance += amount;
+    await account.save();
+  }
+
+  async addAccountTransaction(account: Account, transaction: Transaction) {
+    account.transactions.push(transaction);
   }
 }
