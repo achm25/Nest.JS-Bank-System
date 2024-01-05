@@ -1,20 +1,21 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, forwardRef, Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Account } from './models/account.interface';
 import { User } from '../users';
 import { ValidatorService } from '../utils/services';
-// import { TransactionsService } from '../transactions/transactions.service';
 import { Transaction } from '../transactions/models/transaction.interface';
 import { UserService } from '../users/users.service';
+import { TransactionsService } from '../transactions/transactions.service';
 
 @Injectable()
 export class AccountsService {
   constructor(
     @InjectModel('accounts') private accountModel: Model<Account>,
-    // private readonly transactionsService: TransactionsService,
     private readonly _validatorService: ValidatorService,
     private readonly _userService: UserService,
+    @Inject(forwardRef(() => TransactionsService))
+    private readonly _transactionsService: TransactionsService,
   ) {}
 
   async getAccountData(user: User, accountId: string) {
@@ -31,12 +32,21 @@ export class AccountsService {
     return account.balance;
   }
 
-  // async getAccountTransactions(user: User, accountId: string) {
-  //   this._validatorService.isAccountBelongsToUser(user, accountId);
-  //   const transactions =
-  //     await this.transactionsService.getAccountTransactions(accountId);
-  //   return transactions;
-  // }
+  async getAccountTransactions(user: User, accountId: string) {
+    const transactions =
+      await this._transactionsService.getAccountTransactions(accountId);
+    return transactions;
+  }
+
+  async getAccountStatement(accountId: string, fromDate: Date, toDate: Date) {
+    const transactions =
+      await this._transactionsService.getAccountTransactionsByPeriod(
+        accountId,
+        fromDate,
+        toDate,
+      );
+    return transactions;
+  }
 
   async updateAccountBalance(account: Account, amount: number) {
     account.balance += amount;

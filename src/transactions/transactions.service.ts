@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from "@nestjs/common";
 // import { ValidatorService } from '../utils/services';
 import { DepositDto, TransferDto, WithdrawDto } from './dto';
 import { Model } from 'mongoose';
@@ -14,6 +14,7 @@ export class TransactionsService {
   // private readonly _logger = new Logger(TransactionsService.name);
   constructor(
     @InjectModel('transactions') private transactionModel: Model<Transaction>,
+    @Inject(forwardRef(() => AccountsService))
     private readonly _accountsService: AccountsService,
   ) {}
 
@@ -39,6 +40,23 @@ export class TransactionsService {
     const transactions = await this.transactionModel
       .find({
         $or: [{ fromAccountNumber: accountId }, { toAccountNumber: accountId }],
+      })
+      .exec();
+    return transactions;
+  }
+
+  async getAccountTransactionsByPeriod(
+    accountId: string,
+    fromDate: Date,
+    toDate: Date,
+  ) {
+    const transactions = await this.transactionModel
+      .find({
+        $or: [{ fromAccountNumber: accountId }, { toAccountNumber: accountId }],
+        date: {
+          $gte: fromDate,
+          $lte: toDate,
+        },
       })
       .exec();
     return transactions;

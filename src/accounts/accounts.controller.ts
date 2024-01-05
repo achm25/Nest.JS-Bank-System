@@ -1,4 +1,12 @@
-import { Controller, Get, Param, UseGuards, Post, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  UseGuards,
+  Post,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { GetUser } from '../decorator';
 import { JwtGuard } from '../auth/guard';
 import { AccountsService } from './accounts.service';
@@ -14,6 +22,11 @@ export class AccountsController {
     return this.accountsService.getAccountData(user, accountId);
   }
 
+  @Get('/:id/transactions')
+  async getTransactions(@GetUser() user: User, @Param('id') accountId: string) {
+    return this.accountsService.getAccountTransactions(user, accountId);
+  }
+
   @Get(':id/balance')
   async getBalance(@GetUser() user: User, @Param('id') accountId: string) {
     return this.accountsService.getAccountBalance(user, accountId);
@@ -25,7 +38,20 @@ export class AccountsController {
   }
 
   @Delete(':id/delete')
-  async getTransactions(@GetUser() user: User, @Param('id') accountId: string) {
+  async deleteAccount(@GetUser() user: User, @Param('id') accountId: string) {
     return this.accountsService.deleteAccount(user.id, accountId);
+  }
+
+  @Get(':id/statement')
+  async getAccountStatement(
+    @Param('accountId') accountId: string,
+    @Query('fromDate') fromDate: Date,
+    @Query('toDate') toDate: Date,
+  ) {
+    return this.accountsService.getAccountStatement(
+      accountId,
+      fromDate,
+      toDate,
+    );
   }
 }
