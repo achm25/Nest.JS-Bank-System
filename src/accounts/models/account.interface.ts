@@ -7,7 +7,7 @@ export interface Account extends mongoose.Document {
   username: string;
   firstName: string;
   secondName: string;
-  registerDate: string;
+  registerDate: Date;
   balance: number;
   transactions: mongoose.Types.ObjectId[] | Transaction[];
 }

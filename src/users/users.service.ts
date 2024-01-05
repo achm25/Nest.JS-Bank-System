@@ -27,4 +27,16 @@ export class UserService {
       throw new Error(` Error updating user: ${error.message}`);
     }
   }
+
+  async addAccount(userId: string, accountId: string) {
+    await this.userModel
+      .findByIdAndUpdate(userId, { $push: { accounts: accountId } })
+      .exec();
+  }
+
+  async removeAccount(userId: string, accountId: string) {
+    await this.userModel
+      .findByIdAndUpdate(userId, { $pull: { transactions: accountId } })
+      .exec();
+  }
 }

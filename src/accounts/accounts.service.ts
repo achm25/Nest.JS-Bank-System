@@ -6,6 +6,7 @@ import { User } from '../users';
 import { ValidatorService } from '../utils/services';
 // import { TransactionsService } from '../transactions/transactions.service';
 import { Transaction } from '../transactions/models/transaction.interface';
+import { UserService } from '../users/users.service';
 
 @Injectable()
 export class AccountsService {
@@ -13,6 +14,7 @@ export class AccountsService {
     @InjectModel('accounts') private accountModel: Model<Account>,
     // private readonly transactionsService: TransactionsService,
     private readonly _validatorService: ValidatorService,
+    private readonly _userService: UserService,
   ) {}
 
   async getAccountData(user: User, accountId: string) {
@@ -45,5 +47,32 @@ export class AccountsService {
 
   async addAccountTransaction(account: Account, transaction: Transaction) {
     account.transactions.push(transaction.id);
+  }
+
+  async createAccount(userId: string) {
+    try {
+      const newAccount = new this.accountModel({
+        registerDate: new Date(),
+      });
+      if (!newAccount) {
+        throw new Error('Account Creation Failed!');
+      }
+
+      await this._userService.addAccount(userId, newAccount.id);
+      const res = await newAccount.save();
+      return res;
+    } catch (e) {
+      throw new Error(`Error adding account: ${e.message}`);
+    }
+  }
+
+  async deleteAccount(userId: string, accountId: string) {
+    try {
+      const res = await this.accountModel.findByIdAndDelete(accountId).exec();
+      await this._userService.removeAccount(userId, accountId);
+      return res;
+    } catch (e) {
+      throw new Error(`Error deleting account: ${e.message}`);
+    }
   }
 }

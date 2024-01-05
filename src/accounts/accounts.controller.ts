@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards, Post, Delete } from '@nestjs/common';
 import { GetUser } from '../decorator';
 import { JwtGuard } from '../auth/guard';
 import { AccountsService } from './accounts.service';
@@ -19,8 +19,13 @@ export class AccountsController {
     return this.accountsService.getAccountBalance(user, accountId);
   }
 
-  // @Get(':id/transactions')
-  // async getTransactions(@GetUser() user: User, @Param('id') accountId: string) {
-  //   return this.accountsService.getAccountTransactions(user, accountId);
-  // }
+  @Post('create')
+  async createAccount(@GetUser() user: User) {
+    return this.accountsService.createAccount(user.id);
+  }
+
+  @Delete(':id/delete')
+  async getTransactions(@GetUser() user: User, @Param('id') accountId: string) {
+    return this.accountsService.deleteAccount(user.id, accountId);
+  }
 }
