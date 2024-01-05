@@ -19,8 +19,8 @@ export class AccountsController {
     return this.accountsService.getAccountBalance(user, accountId);
   }
 
-  @Get(':id/transactions')
-  async getTransactions(@GetUser() user: User, @Param('id') accountId: string) {
-    return this.accountsService.getAccountTransactions(user, accountId);
-  }
+  // @Get(':id/transactions')
+  // async getTransactions(@GetUser() user: User, @Param('id') accountId: string) {
+  //   return this.accountsService.getAccountTransactions(user, accountId);
+  // }
 }

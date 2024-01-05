@@ -14,11 +14,6 @@ export class UserController {
     return user;
   }
 
-  @Get('balance')
-  getBalance(@GetUser() user: User) {
-    return user.balance;
-  }
-
   @Patch('me')
   editUser(@GetUser('id') userId: number, @Body() dto: EditUserDto) {
     return this.userService.editUser(userId, dto);

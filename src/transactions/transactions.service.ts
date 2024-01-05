@@ -1,5 +1,5 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { ValidatorService } from '../utils/services';
+import { Injectable } from '@nestjs/common';
+// import { ValidatorService } from '../utils/services';
 import { DepositDto, WithdrawDto } from './dto';
 import { Model } from 'mongoose';
 import { Transaction } from './models/transaction.interface';
@@ -11,12 +11,10 @@ import { Account } from '../accounts/models/account.interface';
 
 @Injectable()
 export class TransactionsService {
-  private readonly _logger = new Logger(TransactionsService.name);
+  // private readonly _logger = new Logger(TransactionsService.name);
   constructor(
-    @InjectModel('transactions')
-    private transactionModel: Model<Transaction>,
-    private readonly _validatorService: ValidatorService,
-    private readonly accountsService: AccountsService,
+    @InjectModel('transactions') private transactionModel: Model<Transaction>,
+    private readonly _accountsService: AccountsService,
   ) {}
 
   async getTransactionData(transactionId: string) {
@@ -47,34 +45,34 @@ export class TransactionsService {
   }
 
   async deposit(user: User, depositDto: DepositDto) {
-    this._validatorService.isAccountBelongsToUser(
-      user,
-      depositDto.fromAccountNumber,
-    );
+    // this._validatorService.isAccountBelongsToUser(
+    //   user,
+    //   depositDto.fromAccountNumber,
+    // );
 
     const account = <Account>(
-      await this.accountsService.getAccountData(
+      await this._accountsService.getAccountData(
         user,
         depositDto.fromAccountNumber,
       )
     );
 
     const toAccount = <Account>(
-      await this.accountsService.getAccountData(
+      await this._accountsService.getAccountData(
         user,
         depositDto.toAccountNumber,
       )
     );
 
-    this._validatorService.isCorrectAmountMoney(
-      account.balance,
-      depositDto.amount,
-    );
-
-    this._validatorService.isCorrectRecipient(
-      depositDto.fromAccountNumber,
-      depositDto.toAccountNumber,
-    );
+    // this._validatorService.isCorrectAmountMoney(
+    //   account.balance,
+    //   depositDto.amount,
+    // );
+    //
+    // this._validatorService.isCorrectRecipient(
+    //   depositDto.fromAccountNumber,
+    //   depositDto.toAccountNumber,
+    // );
 
     try {
       const depositTransaction = new this.transactionModel({
@@ -88,19 +86,19 @@ export class TransactionsService {
       });
 
       const savedTransaction = await depositTransaction.save();
-      await this.accountsService.addAccountTransaction(
+      await this._accountsService.addAccountTransaction(
         account,
         savedTransaction.id,
       );
-      await this.accountsService.updateAccountBalance(
+      await this._accountsService.updateAccountBalance(
         account,
         -1 * depositDto.amount,
       );
-      await this.accountsService.addAccountTransaction(
+      await this._accountsService.addAccountTransaction(
         toAccount,
         savedTransaction.id,
       );
-      await this.accountsService.updateAccountBalance(
+      await this._accountsService.updateAccountBalance(
         toAccount,
         +1 * depositDto.amount,
       );
@@ -111,22 +109,22 @@ export class TransactionsService {
   }
 
   async withdraw(user: User, withdrawDto: WithdrawDto) {
-    this._validatorService.isAccountBelongsToUser(
-      user,
-      withdrawDto.fromAccountNumber,
-    );
+    // this._validatorService.isAccountBelongsToUser(
+    //   user,
+    //   withdrawDto.fromAccountNumber,
+    // );
 
     const account = <Account>(
-      await this.accountsService.getAccountData(
+      await this._accountsService.getAccountData(
         user,
         withdrawDto.fromAccountNumber,
       )
     );
 
-    this._validatorService.isCorrectAmountMoney(
-      account.balance,
-      withdrawDto.amount,
-    );
+    // this._validatorService.isCorrectAmountMoney(
+    //   account.balance,
+    //   withdrawDto.amount,
+    // );
 
     try {
       const depositTransaction = new this.transactionModel({
@@ -139,11 +137,11 @@ export class TransactionsService {
       });
 
       const savedTransaction = await depositTransaction.save();
-      await this.accountsService.addAccountTransaction(
+      await this._accountsService.addAccountTransaction(
         account,
         savedTransaction.id,
       );
-      await this.accountsService.updateAccountBalance(
+      await this._accountsService.updateAccountBalance(
         account,
         -1 * withdrawDto.amount,
       );
