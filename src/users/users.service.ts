@@ -36,7 +36,7 @@ export class UserService {
 
   async removeAccount(userId: string, accountId: string) {
     await this.userModel
-      .findByIdAndUpdate(userId, { $pull: { transactions: accountId } })
+      .findByIdAndUpdate(userId, { $pull: { accounts: accountId } })
       .exec();
   }
 }

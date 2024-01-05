@@ -8,7 +8,7 @@ import {
   UseGuards, Param
 } from "@nestjs/common";
 import { TransactionsService } from './transactions.service';
-import { DepositDto, WithdrawDto } from './dto';
+import { DepositDto, TransferDto, WithdrawDto } from "./dto";
 import { GetUser } from '../decorator';
 import { User } from '../users';
 import { JwtGuard } from '../auth/guard';
@@ -21,6 +21,12 @@ export class TransactionsController {
   @Get(':id')
   async getUserTransactions(@Param('id') transactionId: string) {
     return await this.transactionService.getTransactionData(transactionId);
+  }
+
+  @Post('transfer')
+  @HttpCode(HttpStatus.OK)
+  async transfer(@GetUser() user: User, @Body() transferDto: TransferDto) {
+    return await this.transactionService.transfer(user, transferDto);
   }
 
   @Post('deposit')

@@ -40,13 +40,4 @@ export class ValidatorService {
     return true;
   }
 
-  public isAccountBelongsToUser(user: User, accountId: string): boolean {
-    const isAccountOfUser = (<[Account]>user.accounts).find(
-      (account) => account.id === accountId,
-    );
-    if (!isAccountOfUser) {
-      throw new AccountDosntBelongToUserException();
-    }
-    return true;
-  }
 }

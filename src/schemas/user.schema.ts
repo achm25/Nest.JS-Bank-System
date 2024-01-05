@@ -2,7 +2,7 @@ import * as mongoose from 'mongoose';
 import { RoleType } from '../constants';
 
 export const UserSchema = new mongoose.Schema({
-  accounts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'accounts' }],
+  accounts: [{ type: mongoose.Types.ObjectId, ref: 'accounts' }],
   username: { type: String, required: true },
   hash: { type: String, required: true },
   firstName: String,

@@ -1,12 +1,15 @@
 import { IsEnum, IsString, Min } from 'class-validator';
 import { TransactionType } from '../../constants';
 
-export class DepositDto {
+export class TransferDto {
+  @IsString()
+  fromAccountNumber: string;
+
   @IsString()
   toAccountNumber: string;
 
   @IsEnum(TransactionType)
-  type: TransactionType = TransactionType.DEPOSIT;
+  type: TransactionType = TransactionType.TRANSFER;
 
   @Min(0)
   amount: number;

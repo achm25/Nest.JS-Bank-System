@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 // import { ValidatorService } from '../utils/services';
-import { DepositDto, WithdrawDto } from './dto';
+import { DepositDto, TransferDto, WithdrawDto } from './dto';
 import { Model } from 'mongoose';
 import { Transaction } from './models/transaction.interface';
 import { InjectModel } from '@nestjs/mongoose';
@@ -44,23 +44,18 @@ export class TransactionsService {
     return transactions;
   }
 
-  async deposit(user: User, depositDto: DepositDto) {
-    // this._validatorService.isAccountBelongsToUser(
-    //   user,
-    //   depositDto.fromAccountNumber,
-    // );
-
+  async transfer(user: User, transferDto: TransferDto) {
     const account = <Account>(
       await this._accountsService.getAccountData(
         user,
-        depositDto.fromAccountNumber,
+        transferDto.fromAccountNumber,
       )
     );
 
     const toAccount = <Account>(
       await this._accountsService.getAccountData(
         user,
-        depositDto.toAccountNumber,
+        transferDto.toAccountNumber,
       )
     );
 
@@ -75,24 +70,24 @@ export class TransactionsService {
     // );
 
     try {
-      const depositTransaction = new this.transactionModel({
+      const newTransfer = new this.transactionModel({
         user: user.id,
         date: new Date(),
-        fromAccountNumber: depositDto.fromAccountNumber,
-        toAccountNumber: depositDto.toAccountNumber,
+        fromAccountNumber: transferDto.fromAccountNumber,
+        toAccountNumber: transferDto.toAccountNumber,
         status: TransactionStatus.CREATED,
-        type: TransactionType.DEPOSIT,
-        amount: depositDto.amount,
+        type: TransactionType.TRANSFER,
+        amount: transferDto.amount,
       });
 
-      const savedTransaction = await depositTransaction.save();
+      const savedTransaction = await newTransfer.save();
       await this._accountsService.addAccountTransaction(
         account,
         savedTransaction.id,
       );
       await this._accountsService.updateAccountBalance(
         account,
-        -1 * depositDto.amount,
+        -1 * transferDto.amount,
       );
       await this._accountsService.addAccountTransaction(
         toAccount,
@@ -100,20 +95,15 @@ export class TransactionsService {
       );
       await this._accountsService.updateAccountBalance(
         toAccount,
-        +1 * depositDto.amount,
+        +1 * transferDto.amount,
       );
       return savedTransaction;
     } catch (error) {
-      throw new Error(`Deposit failed: ${error.message}`);
+      throw new Error(`Transfer failed: ${error.message}`);
     }
   }
 
   async withdraw(user: User, withdrawDto: WithdrawDto) {
-    // this._validatorService.isAccountBelongsToUser(
-    //   user,
-    //   withdrawDto.fromAccountNumber,
-    // );
-
     const account = <Account>(
       await this._accountsService.getAccountData(
         user,
@@ -127,7 +117,7 @@ export class TransactionsService {
     // );
 
     try {
-      const depositTransaction = new this.transactionModel({
+      const newWithdraw = new this.transactionModel({
         user: user.id,
         date: new Date(),
         fromAccountNumber: withdrawDto.fromAccountNumber,
@@ -136,7 +126,7 @@ export class TransactionsService {
         amount: withdrawDto.amount,
       });
 
-      const savedTransaction = await depositTransaction.save();
+      const savedTransaction = await newWithdraw.save();
       await this._accountsService.addAccountTransaction(
         account,
         savedTransaction.id,
@@ -149,6 +139,45 @@ export class TransactionsService {
       return savedTransaction;
     } catch (error) {
       throw new Error(`Withdraw failed: ${error.message}`);
+    }
+  }
+
+  async deposit(user: User, depositDto: DepositDto) {
+    const account = <Account>(
+      await this._accountsService.getAccountData(
+        user,
+        depositDto.toAccountNumber,
+      )
+    );
+
+    // this._validatorService.isCorrectAmountMoney(
+    //   account.balance,
+    //   withdrawDto.amount,
+    // );
+
+    try {
+      const depositTransaction = new this.transactionModel({
+        user: user.id,
+        date: new Date(),
+        toAccountNumber: depositDto.toAccountNumber,
+        status: TransactionStatus.CREATED,
+        type: TransactionType.DEPOSIT,
+        amount: depositDto.amount,
+      });
+
+      const savedTransaction = await depositTransaction.save();
+      await this._accountsService.addAccountTransaction(
+        account,
+        savedTransaction.id,
+      );
+      await this._accountsService.updateAccountBalance(
+        account,
+        1 * depositDto.amount,
+      );
+      await user.save();
+      return savedTransaction;
+    } catch (error) {
+      throw new Error(`deposit failed: ${error.message}`);
     }
   }
 }

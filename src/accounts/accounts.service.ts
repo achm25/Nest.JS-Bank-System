@@ -18,8 +18,6 @@ export class AccountsService {
   ) {}
 
   async getAccountData(user: User, accountId: string) {
-    this._validatorService.isAccountBelongsToUser(user, accountId);
-
     try {
       const account = await this.accountModel.findById(accountId).exec();
       return account;
