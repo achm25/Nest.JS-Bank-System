@@ -128,12 +128,6 @@ export class TransactionsService {
         withdrawDto.fromAccountNumber,
       )
     );
-
-    // this._validatorService.isCorrectAmountMoney(
-    //   account.balance,
-    //   withdrawDto.amount,
-    // );
-
     try {
       const newWithdraw = new this.transactionModel({
         user: user.id,
