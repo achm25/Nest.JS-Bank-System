@@ -17,7 +17,7 @@ import { User } from '../users/models/user.interface';
 export class AccountsController {
   constructor(private accountsService: AccountsService) {}
 
-  @Get(':id/me')
+  @Get('/:id/me')
   getMe(@GetUser() user: User, @Param('id') accountId: string) {
     return this.accountsService.getAccountData(user, accountId);
   }
