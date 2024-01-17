@@ -1,3 +1,21 @@
+# NestJS Bank System
+
+Welcome to the NestJS Bank System, a project created to learn Nest JS and explore Service-Oriented Architecture (SOA) principles. This repository provides a practical platform for gaining hands-on experience with Nest JS while implementing a simple yet comprehensive banking system.
+
+## Key Features
+
+- **Nest JS Implementation:** Explore the capabilities of the Nest JS framework for building scalable and maintainable server-side applications.
+
+- **Service-Oriented Architecture (SOA):** Witness the application of SOA principles in designing a robust and modular banking system. Services are decoupled and independently deployable, promoting flexibility and scalability.
+
+
+
+![image](https://github.com/achm25/Simple-Bank-System/assets/48030194/ff05236d-8297-49a0-9ac9-a04db9471e07)
+
+![witdraw](https://github.com/achm25/Simple-Bank-System/assets/48030194/0398b579-4b2a-46aa-ba78-763ec6913513)
+
+
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
